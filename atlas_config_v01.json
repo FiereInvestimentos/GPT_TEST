@@ -1,0 +1,56 @@
+{
+  "system_name": "ATLAS Direct-QP v0.1",
+  "frozen_before_first_backtest": true,
+  "data_years": [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+  "signal_start": "2020-01-01",
+  "splits": {
+    "development": [2020, 2021],
+    "validation": [2022, 2023],
+    "holdout": [2024, 2025]
+  },
+  "assets": {
+    "BOVA": "BOVA11",
+    "PETR": "PETR4",
+    "VALE": "VALE3",
+    "ITUB": "ITUB4",
+    "BBDC": "BBDC4",
+    "BBAS": "BBAS3"
+  },
+  "dte_business_days": [8, 16],
+  "rolling_lookback_days": 1260,
+  "minimum_training_origins": 300,
+  "minimum_model_samples": 80,
+  "minimum_option_trades_signal_day": 10,
+  "minimum_option_quantity_signal_day": 1000,
+  "maximum_relative_bid_ask_spread": 0.40,
+  "maximum_absolute_moneyness": 0.12,
+  "minimum_width_pct_spot": 0.005,
+  "maximum_width_pct_spot": 0.03,
+  "maximum_width_brl": 3.0,
+  "maximum_strike_steps": 3,
+  "risk_free_annual_conservative": 0.15,
+  "signal_cost_per_contract_brl": 9.0,
+  "lcb_z": 1.0,
+  "minimum_lcb_per_contract_brl": 12.0,
+  "minimum_lcb_to_max_loss": 0.04,
+  "maximum_edge_consumption_at_open": 0.50,
+  "capital_brl": 50000.0,
+  "maximum_risk_per_trade_brl": 375.0,
+  "maximum_open_positions": 4,
+  "maximum_same_direction_positions": 2,
+  "maximum_positions_per_asset": 1,
+  "contracts_per_trade": 1,
+  "cost_scenarios": {
+    "raw_open": {"fixed_brl": 0.0, "slippage": "none"},
+    "base": {"fixed_brl": 18.0, "slippage": "one_tick_each_leg"},
+    "stress": {"fixed_brl": 36.0, "slippage": "max_2ticks_5pct_premium_10pct_daily_range"},
+    "severe": {"fixed_brl": 54.0, "slippage": "max_3ticks_10pct_premium_25pct_daily_range"}
+  },
+  "execution": {
+    "signal_price": "previous_close_executable_bid_ask_vertical",
+    "entry_price": "next_session_first_trade_open_each_leg",
+    "exit": "intrinsic_value_at_expiration_using_underlying_close",
+    "no_same_day_open_repricing_for_signal": true,
+    "one_contract_to_reduce_depth_assumption": true
+  }
+}
