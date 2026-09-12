@@ -1,0 +1,38 @@
+name: ATLAS Reproducibility Source Package
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/atlas-source-package.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build source package
+        run: |
+          mkdir -p atlas_source_package/workflows
+          cp atlas_backtest_v01.py atlas_source_package/
+          cp atlas_backtest_v01_retry.py atlas_source_package/
+          cp atlas_config_v01.json atlas_source_package/
+          cp atlas_backtest_v02_backward.py atlas_source_package/
+          cp atlas_config_v02_backward.json atlas_source_package/
+          cp audit_cotahist_raw.py atlas_source_package/
+          cp audit_data.py atlas_source_package/
+          cp .github/workflows/atlas-backtest-v01.yml atlas_source_package/workflows/
+          cp .github/workflows/atlas-backtest-v02-backward.yml atlas_source_package/workflows/
+          cp .github/workflows/cotahist-raw-audit.yml atlas_source_package/workflows/
+          sha256sum atlas_source_package/* atlas_source_package/workflows/* > atlas_source_package/SHA256SUMS.txt
+      - name: Upload source package
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-reproducibility-source
+          path: atlas_source_package/
+          retention-days: 30
