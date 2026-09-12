@@ -29,7 +29,7 @@ jobs:
           cp .github/workflows/atlas-backtest-v01.yml atlas_source_package/workflows/
           cp .github/workflows/atlas-backtest-v02-backward.yml atlas_source_package/workflows/
           cp .github/workflows/cotahist-raw-audit.yml atlas_source_package/workflows/
-          sha256sum atlas_source_package/* atlas_source_package/workflows/* > atlas_source_package/SHA256SUMS.txt
+          find atlas_source_package -type f ! -name SHA256SUMS.txt -print0 | sort -z | xargs -0 sha256sum > atlas_source_package/SHA256SUMS.txt
       - name: Upload source package
         uses: actions/upload-artifact@v4
         with:
