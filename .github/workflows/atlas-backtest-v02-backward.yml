@@ -1,0 +1,46 @@
+name: ATLAS v0.2 Backward Falsification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - atlas_backtest_v01.py
+      - atlas_backtest_v01_retry.py
+      - atlas_backtest_v02_backward.py
+      - atlas_config_v02_backward.json
+      - .github/workflows/atlas-backtest-v02-backward.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore B3 annual files cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/cotahist
+          key: cotahist-b3-2007-2025-v1
+          restore-keys: |
+            cotahist-b3-2017-2025-v1
+      - name: Install research dependencies
+        run: python -m pip install --upgrade numpy pandas scipy matplotlib requests tabulate
+      - name: Run frozen backward falsification
+        run: python atlas_backtest_v02_backward.py
+      - name: Upload complete research package
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-right-tail-v02-backward-results
+          path: atlas_results_v02_backward/
+          if-no-files-found: warn
+          retention-days: 30
